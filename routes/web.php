@@ -18,5 +18,8 @@ Route::get('/', function () {
     return view('welcome', ['users' => $data[0]]);
 });
 
-Route::get('/uploadfile','UploadFileController@index');
-Route::post('/uploadfile','UploadFileController@showUploadFile');
+// Route::get('/uploadfile','UploadFileController@index');
+// Route::post('/uploadfile','UploadFileController@showUploadFile');
+
+Route::get('/uploadfile',['as'=>'intervention.getresizeimage','uses'=>'UploadFileController@getResizeImage']);
+Route::post('/uploadfile',['as'=>'intervention.postresizeimage','uses'=>'UploadFileController@postResizeImage']);

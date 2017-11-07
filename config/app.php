@@ -178,7 +178,7 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         'Collective\Html\HtmlServiceProvider',
-
+        'Intervention\Image\ImageServiceProvider',
     ],
 
     /*
@@ -209,6 +209,7 @@ return [
         'Event' => Illuminate\Support\Facades\Event::class,
         'Form' => 'Collective\Html\FormFacade',
         'Html' => 'Collective\Html\HtmlFacade',
+        'Image' => 'Intervention\Image\Facades\Image',
         'File' => Illuminate\Support\Facades\File::class,
         'Gate' => Illuminate\Support\Facades\Gate::class,
         'Hash' => Illuminate\Support\Facades\Hash::class,

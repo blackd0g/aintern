@@ -1,39 +1,33 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Image;
 
-class UploadFileController extends Controller
-{
-    public function index(){
-        return view('uploadpage');
+class FileController extends Controller {
+
+    public function getResizeImage()
+    {
+        return view('files.resizeimage');
     }
-    public function showUploadFile(Request $request){
-        $file = $request->file('image');
-     
-        //Display File Name
-        echo 'File Name: '.$file->getClientOriginalName();
-        echo '<br>';
-     
-        //Display File Extension
-        echo 'File Extension: '.$file->getClientOriginalExtension();
-        echo '<br>';
-     
-        //Display File Real Path
-        echo 'File Real Path: '.$file->getRealPath();
-        echo '<br>';
-     
-        //Display File Size
-        echo 'File Size: '.$file->getSize();
-        echo '<br>';
-     
-        //Display File Mime Type
-        echo 'File Mime Type: '.$file->getMimeType();
-     
-        //Move Uploaded File
-        $destinationPath = 'uploads';
-        $file->move($destinationPath,$file->getClientOriginalName());
-        return redirect()->action('UploadFileController@index');
-     }
+    public function postResizeImage(Request $request)
+    {
+        $this->validate($request, [
+            'photo' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:1024',
+        ]);
+        $photo = $request->file('photo');
+        $imagename = time().'.'.$photo->getClientOriginalExtension(); 
+   
+        $destinationPath = public_path('/thumbnail_images');
+        $thumb_img = Image::make($photo->getRealPath())->resize(100, 100);
+        $thumb_img->save($destinationPath.'/'.$imagename,80);
+                    
+        $destinationPath = public_path('/normal_images');
+        $photo->move($destinationPath, $imagename);
+        return back()
+            ->with('success','Image Upload successful')
+            ->with('imagename',$imagename);
+    }
+    
 }

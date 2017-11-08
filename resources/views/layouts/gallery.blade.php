@@ -9,6 +9,8 @@
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
         <!-- Styles -->
         <style>
@@ -59,6 +61,10 @@
                 text-transform: uppercase;
             }
 
+            a div:hover { 
+                background-color: #ddd;
+            }
+
             .m-b-md {
                 margin-bottom: 30px;
             }
@@ -66,30 +72,31 @@
     </head>
     <body>
         <div class="flex-center position-ref full-height">
-            @if (Route::has('login'))
-                <div class="top-right links">
-                    @if (Auth::check())
-                        <a href="{{ url('/home') }}">Home</a>
-                    @else
-                        <a href="{{ url('/login') }}">Login</a>
-                        <a href="{{ url('/register') }}">Register</a>
-                    @endif
-                </div>
-            @endif
-
             <div class="content">
                 <div class="title m-b-md">
-                    Laravel
-                    {{ $users->name }}
+                    Gallery
+                    <br>
+                </div>
+                <div class="container">
+                <center><a href="/uploadfile"><button class="btn btn-primary" ><h5>Upload image</h5></button></a></center>
+                    <div class="row">
+                    @if(empty ( $images ))
+                        <center>
+                            <h2> No images in gallery </h2>
+                        </center>
+                    @endif
+                    @foreach ($images as $img)
+                    <a href="showimage/{{ $img->id }}">
+                        <div class="col-md-3" style="padding-top:40px;">
+                            {{ $img->real_name }} <br>
+                            {{ $img->thumbnail_name }} <br>
+                            <img src="{{asset('thumbnail_images/size_3/'.$img->thumbnail_name) }}" style="width: 100%;padding:50px;">
+                        </div>
+                    </a>
+                    @endforeach 
+                    </div>
                 </div>
 
-                <div class="links">
-                    <a href="https://laravel.com/docs">Documentation</a>
-                    <a href="https://laracasts.com">Laracasts</a>
-                    <a href="https://laravel-news.com">News</a>
-                    <a href="https://forge.laravel.com">Forge</a>
-                    <a href="https://github.com/laravel/laravel">GitHub</a>
-                </div>
             </div>
         </div>
     </body>

@@ -12,6 +12,7 @@
 
 */
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 Route::get('/', function () {
     $data = DB::connection('mysql')->select('select * from gallery where 1');
@@ -21,6 +22,11 @@ Route::get('/', function () {
 Route::get('/showimage/{id}', function ($id) {
     $data = DB::connection('mysql')->select('select * from gallery where id = '.$id);
     return view('files.showimage', ['image' => $data]);
+});
+
+Route::get('/createdatabase/{database}', function ($database) {
+    DB::connection('mysql')->statement('CREATE DATABASE '.$database);
+    return 'Setup success';
 });
 
 Route::get('/uploadfile',['as'=>'intervention.getresizeimage','uses'=>'UploadFileController@getResizeImage']);

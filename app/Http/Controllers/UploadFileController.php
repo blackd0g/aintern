@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Image;
@@ -12,12 +13,19 @@ class UploadFileController extends Controller {
     {
         return view('files.uploadpage');
     }
+
     public function postResizeImage(Request $request)
     {
+        $token = $request->header('Authorization');
+        if($token != 'Bearer  exampleToken') {
+            return response()->json([
+                'error'=>'Wrong token'
+            ], 401);
+        }
         $this->validate($request, [
-            'photo' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:1024',
+            'file' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
         ]);
-        $photo = $request->file('photo');
+        $photo = $request->file('file');
 
         $realName = $photo->getClientOriginalName();
         
@@ -28,24 +36,42 @@ class UploadFileController extends Controller {
         $currentTime = time();
         $dateNow = date('Y-m-d H:i:s', strtotime($currentTime));
         $thumbnailName = $currentTime.'.'.$photo->getClientOriginalExtension();
+        $all_path = [];
         for($i = 1;$i <= 5;$i += 1) {
             $thumb_img = Image::make($photo->getRealPath())->resize(intval($width/$i), intval($height/$i));
             $thumb_img->save($destinationPath.'/size_'.$i.'/'.$thumbnailName,80);
+            array_push($all_path, 'public/size_'.$i.'/'.$thumbnailName);
         }
         
         $destinationPath = public_path('/normal_images');
-        echo $width.'</br>';
-        echo $height.'</br>';
-        echo $thumbnailName.'</br>';
-        echo $realName.'</br>';
-        echo $destinationPath.'/'.$thumbnailName.'</br>';
+
         $photo->move($destinationPath, $thumbnailName);
-        DB::insert('insert into gallery (real_name, thumbnail_name, time, width, height) values (?, ?, ?, ?, ?)', [$realName, $thumbnailName, $dateNow, $width, $height]);
-        return back()
-            ->with('success','Image Upload successful')
-            ->with('thumbnailName',$thumbnailName)
-            ->with('width_image',$width)
-            ->with('height_image',$height);
+        DB::insert('insert into file_upload (real_name, thumbnail_name, time, width, height, gallery_id) values (?, ?, ?, ?, ?, ?)', [$realName, $thumbnailName, $dateNow, $width, $height, $request->input('gallery_id') ]);
+        
+        return response()->json([
+            'status'=>'success',
+            'galler_id'=>$request->input('gallery_id'),
+            'thumbnailName'=>$thumbnailName,
+            'realName'=>$realName,
+            'width_image'=>$width,
+            'height_image'=>$height,
+            'path_picture'=>$all_path
+        ], 200);
+    }
+
+    public function settingUpload(Request $request)
+    {
+        $token = $request->header('Authorization');
+        if($token != 'Bearer  exampleToken') {
+            return response()->json([
+                'error'=>'Wrong token'
+            ], 401);
+        }
+        return response()->json([
+            'status'=>'success',
+            'maximumFileSize'=>$request->input('maximumfilesize'),
+            'scale'=>$request->input('scale')
+        ], 200);
     }
     
 }

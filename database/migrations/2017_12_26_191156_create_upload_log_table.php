@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateGalleryTable extends Migration
+class CreateUploadLogTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,16 @@ class CreateGalleryTable extends Migration
      */
     public function up()
     {
-        Schema::create('gallery', function (Blueprint $table) {
+        Schema::create('upload_log', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('real_name', 50);
-            $table->string('thumbnail_name', 50);
+            $table->integer('user_id')
+                ->references('id')
+                ->on('users');
+            $table->string('actions', 50);
+            $table->string('status', 50);
+            $table->string('target', 50);
+            $table->integer('target_id');
             $table->dateTime('time');
-            $table->integer('width');
-            $table->integer('height');
         });
     }
 
@@ -30,6 +33,6 @@ class CreateGalleryTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('gallery');
+        Schema::dropIfExists('upload_log');
     }
 }

@@ -78,7 +78,7 @@
                     <br>
                 </div>
                 <div class="container">
-                <center><a href="/uploadfile"><button class="btn btn-primary" ><h5>Upload image</h5></button></a></center>
+                <center><a href="/gallery/uploadfile"><button class="btn btn-primary" ><h5>Upload image</h5></button></a></center>
                     <div class="row">
                     @if(empty ( $images ))
                         <center>

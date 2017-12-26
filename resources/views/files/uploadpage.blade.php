@@ -12,7 +12,7 @@
     </div>
     @endif
     <div style="padding:30px;">
-        <a href="/"><button class="btn btn-primary"><h5>Back to gallery</h5></button></a>
+        <a href="/gallery/"><button class="btn btn-primary"><h5>Back to gallery</h5></button></a>
     </div>
     {!! Form::open(array('route' => 'intervention.postresizeimage','files'=>true)) !!}
         <div class="row">

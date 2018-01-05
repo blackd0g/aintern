@@ -23,7 +23,7 @@ class CreateFileUploadTable extends Migration
             $table->integer('gallery_id')
                 ->references('id')
                 ->on('gallery');
-            $table->integer('upload_by')
+            $table->integer('user_id')
                 ->references('id')
                 ->on('users');
         });
